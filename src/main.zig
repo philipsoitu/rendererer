@@ -16,11 +16,20 @@ pub fn main() !void {
 
     for (0..height) |y| {
         for (0..width) |x| {
+            const r_ratio: f64 = @as(f64, @floatFromInt(x)) / @as(f64, @floatFromInt(width - 1));
+            const g_ratio: f64 = @as(f64, @floatFromInt(y)) / @as(f64, @floatFromInt(height - 1));
+            const b_ratio: f64 = 0.0;
+
+            const r: u8 = @intFromFloat(255.99 * r_ratio);
+            const g: u8 = @intFromFloat(255.99 * g_ratio);
+            const b: u8 = @intFromFloat(255.99 * b_ratio);
+
             const pixel: Pixel = .{
-                .r = 255,
-                .g = 200,
-                .b = 100,
+                .r = r,
+                .g = g,
+                .b = b,
             };
+
             framebuffer[y][x] = pixel;
         }
     }
