@@ -3,15 +3,27 @@ pub fn Vec(comptime T: type, comptime N: usize) type {
         data: [N]T,
 
         pub fn x(self: @This()) T {
-            return self.data[1];
+            comptime if (N >= 1) {
+                return self.data[0];
+            } else {
+                @compileError("Vec.x is not available for N < 1");
+            };
         }
 
         pub fn y(self: @This()) T {
-            return self.data[1];
+            comptime if (N >= 2) {
+                return self.data[1];
+            } else {
+                @compileError("Vec.y is not available for N < 2");
+            };
         }
 
         pub fn z(self: @This()) T {
-            return self.data[1];
+            comptime if (N >= 3) {
+                return self.data[2];
+            } else {
+                @compileError("Vec.z is not available for N < 3");
+            };
         }
 
         pub fn length(self: @This()) T {
