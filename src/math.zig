@@ -22,12 +22,13 @@ pub fn perpendicular(vec: Vec2f) Vec2f {
 pub fn pointOnRightSide(a: Vec2f, b: Vec2f, p: Vec2f) bool {
     const ap = Vec2f{
         .x = p.x - a.x,
-        .y = p.y - p.y,
+        .y = p.y - a.y,
     };
-    const ab_perp = perpendicular(Vec2f{
+    const ab = Vec2f{
         .x = b.x - a.x,
         .y = b.y - a.y,
-    });
+    };
+    const ab_perp = perpendicular(ab);
     return dotProduct(ap, ab_perp) >= 0;
 }
 

@@ -16,7 +16,7 @@ pub fn main() !void {
     var framebuffer: [height][width]Pixel = std.mem.zeroes([height][width]Pixel);
 
     const a = math.Vec2f{
-        .x = 100,
+        .x = 150,
         .y = 100,
     };
     const b = math.Vec2f{
@@ -24,8 +24,8 @@ pub fn main() !void {
         .y = 200,
     };
     const c = math.Vec2f{
-        .x = 200,
-        .y = 200,
+        .x = 250,
+        .y = 260,
     };
 
     for (0..height) |y| {
