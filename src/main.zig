@@ -16,7 +16,7 @@ pub fn main() !void {
     var framebuffer: [height][width]Pixel = std.mem.zeroes([height][width]Pixel);
 
     const a = math.Vec2f{
-        .x = 0.2 * width,
+        .x = 100,
         .y = 100,
     };
     const b = math.Vec2f{
