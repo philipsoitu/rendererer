@@ -1,63 +1,39 @@
 const std = @import("std");
 const ppm = @import("ppm.zig");
 const math = @import("math.zig");
+const rasterizer = @import("rasterizer.zig");
+const Pixel = @import("Types.zig").Pixel;
+const Triangle = @import("Types.zig").Triangle;
 
-pub const Pixel = struct {
-    r: u8,
-    g: u8,
-    b: u8,
-};
+const filename = "hello.ppm";
+const WIDTH: usize = 640;
+const HEIGHT: usize = 480;
 
 pub fn main() !void {
-    const filename = "hello.ppm";
-    const width: usize = 640;
-    const height: usize = 480;
-
-    var framebuffer: [height][width]Pixel = std.mem.zeroes([height][width]Pixel);
-
-    const a = math.Vec2f{
-        .x = 150,
-        .y = 100,
+    const triangles = [_]Triangle{
+        Triangle{
+            .a = .{ .x = 100, .y = 100 },
+            .b = .{ .x = 100, .y = 200 },
+            .c = .{ .x = 200, .y = 200 },
+            .color = .{ .r = 255, .g = 255, .b = 255 },
+        },
+        Triangle{
+            .a = .{ .x = 100, .y = 100 },
+            .b = .{ .x = 200, .y = 100 },
+            .c = .{ .x = 200, .y = 200 },
+            .color = .{ .r = 255, .g = 200, .b = 0 },
+        },
+        Triangle{
+            .a = .{ .x = 122, .y = 23 },
+            .b = .{ .x = 422, .y = 223 },
+            .c = .{ .x = 522, .y = 203 },
+            .color = .{ .r = 25, .g = 9, .b = 200 },
+        },
     };
-    const b = math.Vec2f{
-        .x = 100,
-        .y = 200,
-    };
-    const c = math.Vec2f{
-        .x = 250,
-        .y = 260,
-    };
 
-    for (0..height) |y| {
-        for (0..width) |x| {
-            const r_ratio: f64 = @as(f64, @floatFromInt(x)) / @as(f64, @floatFromInt(width - 1));
-            const g_ratio: f64 = @as(f64, @floatFromInt(y)) / @as(f64, @floatFromInt(height - 1));
-            const b_ratio: f64 = 0.0;
+    var framebuffer: [HEIGHT][WIDTH]Pixel = undefined;
 
-            const red: u8 = @intFromFloat(255.99 * r_ratio);
-            const green: u8 = @intFromFloat(255.99 * g_ratio);
-            const blue: u8 = @intFromFloat(255.99 * b_ratio);
+    rasterizer.render(WIDTH, HEIGHT, &framebuffer, &triangles);
 
-            var pixel: Pixel = .{
-                .r = red,
-                .g = green,
-                .b = blue,
-            };
-
-            if (math.pointInTriangle(a, b, c, math.Vec2f{
-                .x = @floatFromInt(x),
-                .y = @floatFromInt(y),
-            })) {
-                pixel = .{
-                    .r = 0,
-                    .g = 0,
-                    .b = 255,
-                };
-            }
-
-            framebuffer[y][x] = pixel;
-        }
-    }
-
-    try ppm.write(filename, width, height, framebuffer);
+    try ppm.write(filename, WIDTH, HEIGHT, framebuffer);
 }

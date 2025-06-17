@@ -1,9 +1,7 @@
 const std = @import("std");
-
-pub const Vec2f = struct {
-    x: f64,
-    y: f64,
-};
+const Pixel = @import("Types.zig").Pixel;
+const Vec2f = @import("Types.zig").Vec2f;
+const Triangle = @import("Types.zig").Triangle;
 
 // that thing we learned in linear algebra
 pub fn dotProduct(a: Vec2f, b: Vec2f) f64 {
@@ -33,9 +31,9 @@ pub fn pointOnRightSide(a: Vec2f, b: Vec2f, p: Vec2f) bool {
 }
 
 // checks if point p is in triangle abc
-pub fn pointInTriangle(a: Vec2f, b: Vec2f, c: Vec2f, p: Vec2f) bool {
-    const side_ab = pointOnRightSide(a, b, p);
-    const side_bc = pointOnRightSide(b, c, p);
-    const side_ca = pointOnRightSide(c, a, p);
+pub fn pointInTriangle(t: Triangle, p: Vec2f) bool {
+    const side_ab = pointOnRightSide(t.a, t.b, p);
+    const side_bc = pointOnRightSide(t.b, t.c, p);
+    const side_ca = pointOnRightSide(t.c, t.a, p);
     return side_ab == side_bc and side_bc == side_ca;
 }

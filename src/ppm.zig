@@ -1,7 +1,12 @@
 const std = @import("std");
-const Pixel = @import("main.zig").Pixel;
+const Pixel = @import("Types.zig").Pixel;
 
-pub fn write(filename: []const u8, width: usize, height: usize, framebuffer: anytype) !void {
+pub fn write(
+    filename: []const u8,
+    comptime width: usize,
+    comptime height: usize,
+    framebuffer: [height][width]Pixel,
+) !void {
     const file = try std.fs.cwd().createFile(filename, .{});
     defer file.close();
 
