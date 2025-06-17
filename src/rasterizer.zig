@@ -45,10 +45,10 @@ fn drawTriangle(
     const max_x = @max(triangle.a.x, triangle.b.x, triangle.c.x);
     const max_y = @max(triangle.a.y, triangle.b.y, triangle.c.y);
 
-    const bb_start_x: usize = @intFromFloat(@max(0, @min(min_x, width - 1)));
-    const bb_start_y: usize = @intFromFloat(@max(0, @min(min_y, height - 1)));
-    const bb_end_x: usize = @intFromFloat(@max(0, @min(max_x, width - 1)));
-    const bb_end_y: usize = @intFromFloat(@max(0, @min(max_y, height - 1)));
+    const bb_start_x: usize = @intFromFloat(@max(0, @min(min_x, width)));
+    const bb_start_y: usize = @intFromFloat(@max(0, @min(min_y, height)));
+    const bb_end_x: usize = @intFromFloat(@max(0, @min(max_x, width)));
+    const bb_end_y: usize = @intFromFloat(@max(0, @min(max_y, height)));
 
     for (bb_start_y..bb_end_y) |y| {
         for (bb_start_x..bb_end_x) |x| {
