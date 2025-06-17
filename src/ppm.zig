@@ -1,5 +1,5 @@
 const std = @import("std");
-const Pixel = @import("Types.zig").Pixel;
+const Pixel = @import("types.zig").Pixel;
 
 pub fn write(
     filename: []const u8,

@@ -1,9 +1,9 @@
 const std = @import("std");
 const math = @import("math.zig");
 const ppm = @import("ppm.zig");
-const Pixel = @import("Types.zig").Pixel;
-const Vec2f = @import("Types.zig").Vec2f;
-const Triangle = @import("Types.zig").Triangle;
+const Pixel = @import("types.zig").Pixel;
+const Vec2f = @import("types.zig").Vec2f;
+const Triangle = @import("types.zig").Triangle;
 
 pub fn render(
     comptime width: usize,

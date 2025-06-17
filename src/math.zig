@@ -1,7 +1,7 @@
 const std = @import("std");
-const Pixel = @import("Types.zig").Pixel;
-const Vec2f = @import("Types.zig").Vec2f;
-const Triangle = @import("Types.zig").Triangle;
+const Pixel = @import("types.zig").Pixel;
+const Vec2f = @import("types.zig").Vec2f;
+const Triangle = @import("types.zig").Triangle;
 
 // that thing we learned in linear algebra
 pub fn dotProduct(a: Vec2f, b: Vec2f) f64 {

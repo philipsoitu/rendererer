@@ -2,12 +2,12 @@ const std = @import("std");
 const ppm = @import("ppm.zig");
 const math = @import("math.zig");
 const rasterizer = @import("rasterizer.zig");
-const Pixel = @import("Types.zig").Pixel;
-const Triangle = @import("Types.zig").Triangle;
+const Pixel = @import("types.zig").Pixel;
+const Triangle = @import("types.zig").Triangle;
 
+const WIDTH: usize = @import("config.zig").WIDTH;
+const HEIGHT: usize = @import("config.zig").HEIGHT;
 const filename = "hello.ppm";
-const WIDTH: usize = 640;
-const HEIGHT: usize = 480;
 
 pub fn main() !void {
     const triangles = [_]Triangle{
@@ -15,7 +15,7 @@ pub fn main() !void {
             .a = .{ .x = 100, .y = 100 },
             .b = .{ .x = 100, .y = 200 },
             .c = .{ .x = 200, .y = 200 },
-            .color = .{ .r = 255, .g = 255, .b = 255 },
+            .color = .{ .r = 0, .g = 255, .b = 255 },
         },
         Triangle{
             .a = .{ .x = 100, .y = 100 },
