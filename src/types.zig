@@ -9,6 +9,12 @@ pub const Vec2f = struct {
     y: f64,
 };
 
+pub const Vec3f = struct {
+    x: f64,
+    y: f64,
+    z: f64,
+};
+
 pub const Triangle = struct {
     a: Vec2f,
     b: Vec2f,

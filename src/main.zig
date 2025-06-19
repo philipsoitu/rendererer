@@ -1,5 +1,6 @@
 const std = @import("std");
 const ppm = @import("ppm.zig");
+const obj = @import("obj.zig");
 const math = @import("math.zig");
 const rasterizer = @import("rasterizer.zig");
 const Pixel = @import("types.zig").Pixel;
@@ -10,6 +11,10 @@ const HEIGHT: usize = @import("config.zig").HEIGHT;
 const filename = "hello.ppm";
 
 pub fn main() !void {
+    const obj_model = try obj.parseFile("models/teapot.obj");
+    _ = obj_model;
+
+    // hi
     const triangles = [_]Triangle{
         Triangle{
             .a = .{ .x = 100, .y = 100 },
