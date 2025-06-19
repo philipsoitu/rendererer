@@ -12,9 +12,8 @@ const filename = "hello.ppm";
 
 pub fn main() !void {
     const obj_model = try obj.parseFile("models/teapot.obj");
-    _ = obj_model;
+    defer obj_model.deinit();
 
-    // hi
     const triangles = [_]Triangle{
         Triangle{
             .a = .{ .x = 100, .y = 100 },

@@ -4,7 +4,7 @@ const Triangle = @import("types.zig").Triangle;
 
 const ObjModel = struct {
     vertices: std.ArrayList(Vec3f),
-    faces: std.ArrayList(Triangle),
+    faces: std.ArrayList(Face),
 
     pub fn deinit(self: @This()) void {
         self.vertices.deinit();
@@ -13,7 +13,9 @@ const ObjModel = struct {
 };
 
 const Face = struct {
-    indexes: [3]usize,
+    a: usize,
+    b: usize,
+    c: usize,
 };
 
 const LineResult = union(enum) {
@@ -23,6 +25,9 @@ const LineResult = union(enum) {
 
 pub fn parseFile(filename: []const u8) !ObjModel {
     const allocator = std.heap.page_allocator;
+
+    var vertices = try std.ArrayList(Vec3f).initCapacity(allocator, 100);
+    var faces = try std.ArrayList(Face).initCapacity(allocator, 100);
 
     const file = try std.fs.cwd().openFile(filename, .{});
     defer file.close();
@@ -38,17 +43,29 @@ pub fn parseFile(filename: []const u8) !ObjModel {
     var lines = std.mem.splitScalar(u8, buffer, '\n');
 
     while (lines.next()) |line| {
-        const line_res = try parseLine(line);
-        switch (line_res) {
-            .vec => |v| {
-                std.debug.print("vector: {} {} {}\n", .{ v.x, v.y, v.z });
-            },
-            .face => |f| {
-                std.debug.print("face: {d} {d} {d}\n", .{ f.indexes[0], f.indexes[1], f.indexes[2] });
-            },
+        // clean up line
+        const trimmed = std.mem.trim(u8, line, " \r\n");
+
+        if (std.mem.startsWith(u8, trimmed, "v ")) {
+            // is vertice
+            var iter = std.mem.tokenizeScalar(u8, trimmed[2..], ' ');
+            const x = try std.fmt.parseFloat(f64, iter.next().?);
+            const y = try std.fmt.parseFloat(f64, iter.next().?);
+            const z = try std.fmt.parseFloat(f64, iter.next().?);
+            try vertices.append(Vec3f{ .x = x, .y = y, .z = z });
+        } else if (std.mem.startsWith(u8, line, "f ")) {
+            // is face
+            var iter = std.mem.tokenizeScalar(u8, line[2..], ' ');
+            const a = try std.fmt.parseInt(usize, iter.next().?, 10);
+            const b = try std.fmt.parseInt(usize, iter.next().?, 10);
+            const c = try std.fmt.parseInt(usize, iter.next().?, 10);
+            try faces.append(.{ .a = a, .b = b, .c = c });
         }
     }
-    return undefined;
+    return ObjModel{
+        .vertices = vertices,
+        .faces = faces,
+    };
 }
 
 pub fn parseLine(line: []const u8) !LineResult {
