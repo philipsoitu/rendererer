@@ -18,11 +18,6 @@ const Face = struct {
     c: usize,
 };
 
-const LineResult = union(enum) {
-    vec: Vec3f,
-    face: Face,
-};
-
 pub fn parseFile(filename: []const u8) !ObjModel {
     const allocator = std.heap.page_allocator;
 
@@ -68,56 +63,23 @@ pub fn parseFile(filename: []const u8) !ObjModel {
     };
 }
 
-pub fn parseLine(line: []const u8) !LineResult {
-    var tokens = std.mem.splitScalar(u8, line, ' ');
-    var i: usize = 0;
+pub fn modelToTriangles(obj_model: ObjModel) !std.ArrayList(Triangle) {
+    const allocator = std.heap.page_allocator;
+    var triangles = try std.ArrayList(Triangle).initCapacity(allocator, 100);
 
-    var line_return: LineResult = undefined;
+    for (obj_model.faces.items) |face| {
+        const a = obj_model.vertices.items[face.a];
+        const b = obj_model.vertices.items[face.a];
+        const c = obj_model.vertices.items[face.a];
 
-    while (tokens.next()) |token| {
-        switch (i) {
-            // determine type of line
-            0 => {
-                if (std.mem.eql(u8, token, "v")) {
-                    line_return = .{ .vec = .{
-                        .x = 0.0,
-                        .y = 0.0,
-                        .z = 0.0,
-                    } };
-                } else if (std.mem.eql(u8, token, "f")) {
-                    line_return = .{ .face = .{ .indexes = std.mem.zeroes([3]usize) } };
-                }
-            },
-            // parse first number
-            1 => {
-                if (line_return == .vec) {
-                    line_return.vec.x = try std.fmt.parseFloat(f64, token);
-                } else if (line_return == .face) {
-                    line_return.face.indexes[0] = try std.fmt.parseInt(usize, token, 10);
-                }
-            },
-            // parse second number
-            2 => {
-                if (line_return == .vec) {
-                    line_return.vec.y = try std.fmt.parseFloat(f64, token);
-                } else if (line_return == .face) {
-                    line_return.face.indexes[1] = try std.fmt.parseInt(usize, token, 10);
-                }
-            },
-            // parse third number
-            3 => {
-                if (line_return == .vec) {
-                    line_return.vec.z = try std.fmt.parseFloat(f64, token);
-                } else if (line_return == .face) {
-                    line_return.face.indexes[2] = try std.fmt.parseInt(usize, token, 10);
-                }
-            },
-            // too many numbers
-            else => {
-                return error.TOO_MANY_ARGS_IN_LINE;
-            },
-        }
-        i += 1;
+        const triangle = Triangle{
+            .a = a,
+            .b = b,
+            .c = c,
+        };
+
+        try triangles.append(triangle);
     }
-    return line_return;
+
+    return triangles;
 }

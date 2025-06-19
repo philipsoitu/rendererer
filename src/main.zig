@@ -14,6 +14,8 @@ pub fn main() !void {
     const obj_model = try obj.parseFile("models/teapot.obj");
     defer obj_model.deinit();
 
+    _ = try obj.modelToTriangles(obj_model);
+
     const triangles = [_]Triangle{
         Triangle{
             .a = .{ .x = 100, .y = 100 },
