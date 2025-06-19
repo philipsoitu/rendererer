@@ -9,11 +9,11 @@ pub fn render(
     comptime width: usize,
     comptime height: usize,
     framebuffer: *[height][width]Pixel,
-    triangles: []const Triangle,
+    triangles: *const []Triangle,
 ) void {
     clearFramebuffer(width, height, framebuffer);
 
-    for (triangles) |triangle| {
+    for (triangles.*) |triangle| {
         drawTriangle(width, height, framebuffer, triangle);
     }
 }

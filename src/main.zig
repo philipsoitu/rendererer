@@ -15,10 +15,7 @@ pub fn main() !void {
     defer obj_model.deinit();
 
     const triangles = try obj.modelToTriangles(obj_model);
-
-    for (triangles.items) |t| {
-        std.debug.print("{}\n", .{t});
-    }
+    defer triangles.deinit();
 
     var framebuffer: [HEIGHT][WIDTH]Pixel = undefined;
 

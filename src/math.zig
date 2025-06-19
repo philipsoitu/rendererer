@@ -50,6 +50,6 @@ pub fn vec3fToVec2f(vec3f: Vec3f, screen_size: Vec2f) Vec2f {
 
     return Vec2f{
         .x = pixel_offset.x + screen_size.x / 2,
-        .y = pixel_offset.y + screen_size.y / 2,
+        .y = -pixel_offset.y + screen_size.y / 2 + 200,
     };
 }
