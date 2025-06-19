@@ -1,6 +1,11 @@
 const std = @import("std");
+const math = @import("math.zig");
+const Vec2f = @import("types.zig").Vec2f;
 const Vec3f = @import("types.zig").Vec3f;
 const Triangle = @import("types.zig").Triangle;
+
+const WIDTH = @import("config.zig").WIDTH;
+const HEIGHT = @import("config.zig").HEIGHT;
 
 const ObjModel = struct {
     vertices: std.ArrayList(Vec3f),
@@ -67,15 +72,18 @@ pub fn modelToTriangles(obj_model: ObjModel) !std.ArrayList(Triangle) {
     const allocator = std.heap.page_allocator;
     var triangles = try std.ArrayList(Triangle).initCapacity(allocator, 100);
 
+    const screen = Vec2f{ .x = WIDTH, .y = HEIGHT };
+
     for (obj_model.faces.items) |face| {
-        const a = obj_model.vertices.items[face.a];
-        const b = obj_model.vertices.items[face.a];
-        const c = obj_model.vertices.items[face.a];
+        const a = math.vec3fToVec2f(obj_model.vertices.items[face.a - 1], screen);
+        const b = math.vec3fToVec2f(obj_model.vertices.items[face.b - 1], screen);
+        const c = math.vec3fToVec2f(obj_model.vertices.items[face.c - 1], screen);
 
         const triangle = Triangle{
             .a = a,
             .b = b,
             .c = c,
+            .color = .{ .r = 255, .g = 0, .b = 0 },
         };
 
         try triangles.append(triangle);

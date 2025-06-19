@@ -14,32 +14,15 @@ pub fn main() !void {
     const obj_model = try obj.parseFile("models/teapot.obj");
     defer obj_model.deinit();
 
-    _ = try obj.modelToTriangles(obj_model);
+    const triangles = try obj.modelToTriangles(obj_model);
 
-    const triangles = [_]Triangle{
-        Triangle{
-            .a = .{ .x = 100, .y = 100 },
-            .b = .{ .x = 100, .y = 200 },
-            .c = .{ .x = 200, .y = 200 },
-            .color = .{ .r = 0, .g = 255, .b = 255 },
-        },
-        Triangle{
-            .a = .{ .x = 100, .y = 100 },
-            .b = .{ .x = 200, .y = 100 },
-            .c = .{ .x = 200, .y = 200 },
-            .color = .{ .r = 255, .g = 200, .b = 0 },
-        },
-        Triangle{
-            .a = .{ .x = 122, .y = 23 },
-            .b = .{ .x = 422, .y = 223 },
-            .c = .{ .x = 522, .y = 203 },
-            .color = .{ .r = 25, .g = 9, .b = 200 },
-        },
-    };
+    for (triangles.items) |t| {
+        std.debug.print("{}\n", .{t});
+    }
 
     var framebuffer: [HEIGHT][WIDTH]Pixel = undefined;
 
-    rasterizer.render(WIDTH, HEIGHT, &framebuffer, &triangles);
+    rasterizer.render(WIDTH, HEIGHT, &framebuffer, &triangles.items);
 
     try ppm.write(filename, WIDTH, HEIGHT, framebuffer);
 }
