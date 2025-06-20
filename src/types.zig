@@ -1,4 +1,5 @@
 const math = @import("math.zig");
+const projection = @import("projection.zig");
 const config = @import("config.zig");
 
 pub const Pixel = struct {
@@ -26,9 +27,9 @@ pub const Triangle2D = struct {
 
     pub fn fromTriangle3D(t3: Triangle3D) @This() {
         const t2: Triangle2D = .{
-            .a = math.vec3fToVec2f(t3.a, config.WIDTH, config.HEIGHT),
-            .b = math.vec3fToVec2f(t3.b, config.WIDTH, config.HEIGHT),
-            .c = math.vec3fToVec2f(t3.c, config.WIDTH, config.HEIGHT),
+            .a = projection.vec3fToVec2f(t3.a, config.WIDTH, config.HEIGHT),
+            .b = projection.vec3fToVec2f(t3.b, config.WIDTH, config.HEIGHT),
+            .c = projection.vec3fToVec2f(t3.c, config.WIDTH, config.HEIGHT),
             .color = t3.color,
         };
         return t2;

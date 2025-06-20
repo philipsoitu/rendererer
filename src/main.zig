@@ -6,9 +6,9 @@ const rasterizer = @import("rasterizer.zig");
 const Pixel = @import("types.zig").Pixel;
 const Triangle2D = @import("types.zig").Triangle2D;
 
+var yaw = @import("config.zig").yaw;
 const WIDTH: usize = @import("config.zig").WIDTH;
 const HEIGHT: usize = @import("config.zig").HEIGHT;
-const filename = "hello.ppm";
 
 pub fn main() !void {
     const obj_model = try obj.parseFile("models/cow.obj");
@@ -18,7 +18,14 @@ pub fn main() !void {
     defer triangles.deinit();
 
     var framebuffer: [HEIGHT][WIDTH]Pixel = undefined;
-    rasterizer.render(WIDTH, HEIGHT, &framebuffer, &triangles.items);
 
-    try ppm.write(filename, WIDTH, HEIGHT, framebuffer);
+    var filename_buffer: [23]u8 = undefined;
+
+    for (0..100) |frame| {
+        yaw = @floatFromInt(frame);
+        rasterizer.render(WIDTH, HEIGHT, &framebuffer, &triangles.items);
+
+        const filename = try std.fmt.bufPrint(&filename_buffer, "output/frames/f{0:0>4}.ppm", .{frame + 1});
+        try ppm.write(filename, WIDTH, HEIGHT, framebuffer);
+    }
 }
