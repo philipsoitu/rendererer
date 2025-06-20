@@ -15,6 +15,7 @@
           buildInputs = [
             pkgs.feh
             pkgs.zig
+            pkgs.ffmpeg
           ];
         };
       });
