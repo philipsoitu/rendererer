@@ -16,6 +16,7 @@
             pkgs.feh
             pkgs.zig
             pkgs.ffmpeg
+            pkgs.mpv
           ];
         };
       });
