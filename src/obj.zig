@@ -2,7 +2,8 @@ const std = @import("std");
 const math = @import("math.zig");
 const Vec2f = @import("types.zig").Vec2f;
 const Vec3f = @import("types.zig").Vec3f;
-const Triangle = @import("types.zig").Triangle;
+const Triangle2D = @import("types.zig").Triangle2D;
+const Triangle3D = @import("types.zig").Triangle3D;
 
 const WIDTH = @import("config.zig").WIDTH;
 const HEIGHT = @import("config.zig").HEIGHT;
@@ -49,9 +50,9 @@ pub fn parseFile(filename: []const u8) !ObjModel {
         if (std.mem.startsWith(u8, trimmed, "v ")) {
             // is vertice
             var iter = std.mem.tokenizeScalar(u8, trimmed[2..], ' ');
-            const x = try std.fmt.parseFloat(f64, iter.next().?);
-            const y = try std.fmt.parseFloat(f64, iter.next().?);
-            const z = try std.fmt.parseFloat(f64, iter.next().?);
+            const x = try std.fmt.parseFloat(f32, iter.next().?);
+            const y = try std.fmt.parseFloat(f32, iter.next().?);
+            const z = try std.fmt.parseFloat(f32, iter.next().?);
             try vertices.append(Vec3f{ .x = x, .y = y, .z = z });
         } else if (std.mem.startsWith(u8, line, "f ")) {
             // is face
@@ -68,22 +69,30 @@ pub fn parseFile(filename: []const u8) !ObjModel {
     };
 }
 
-pub fn modelToTriangles(obj_model: ObjModel) !std.ArrayList(Triangle) {
+pub fn modelToTriangles(obj_model: ObjModel) !std.ArrayList(Triangle3D) {
     const allocator = std.heap.page_allocator;
-    var triangles = try std.ArrayList(Triangle).initCapacity(allocator, 100);
+    var triangles = try std.ArrayList(Triangle3D).initCapacity(allocator, 100);
 
-    const screen = Vec2f{ .x = WIDTH, .y = HEIGHT };
+    const rand = std.crypto.random;
 
     for (obj_model.faces.items) |face| {
-        const a = math.vec3fToVec2f(obj_model.vertices.items[face.a - 1], screen);
-        const b = math.vec3fToVec2f(obj_model.vertices.items[face.b - 1], screen);
-        const c = math.vec3fToVec2f(obj_model.vertices.items[face.c - 1], screen);
+        const a = obj_model.vertices.items[face.a - 1];
+        const b = obj_model.vertices.items[face.b - 1];
+        const c = obj_model.vertices.items[face.c - 1];
 
-        const triangle = Triangle{
+        const rand_r = rand.int(u8);
+        const rand_g = rand.int(u8);
+        const rand_b = rand.int(u8);
+
+        const triangle = Triangle3D{
             .a = a,
             .b = b,
             .c = c,
-            .color = .{ .r = 255, .g = 0, .b = 0 },
+            .color = .{
+                .r = rand_r,
+                .g = rand_g,
+                .b = rand_b,
+            },
         };
 
         try triangles.append(triangle);

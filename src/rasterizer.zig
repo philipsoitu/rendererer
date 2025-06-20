@@ -3,18 +3,20 @@ const math = @import("math.zig");
 const ppm = @import("ppm.zig");
 const Pixel = @import("types.zig").Pixel;
 const Vec2f = @import("types.zig").Vec2f;
-const Triangle = @import("types.zig").Triangle;
+const Triangle2D = @import("types.zig").Triangle2D;
+const Triangle3D = @import("types.zig").Triangle3D;
 
 pub fn render(
     comptime width: usize,
     comptime height: usize,
     framebuffer: *[height][width]Pixel,
-    triangles: *const []Triangle,
+    triangles3D: *const []Triangle3D,
 ) void {
     clearFramebuffer(width, height, framebuffer);
 
-    for (triangles.*) |triangle| {
-        drawTriangle(width, height, framebuffer, triangle);
+    for (triangles3D.*) |triangle3D| {
+        const triangle = Triangle2D.fromTriangle3D(triangle3D);
+        drawTriangle2D(width, height, framebuffer, triangle);
     }
 }
 
@@ -34,11 +36,11 @@ fn clearFramebuffer(
     }
 }
 
-fn drawTriangle(
+fn drawTriangle2D(
     comptime width: usize,
     comptime height: usize,
     framebuffer: *[height][width]Pixel,
-    triangle: Triangle,
+    triangle: Triangle2D,
 ) void {
     const min_x = @min(triangle.a.x, triangle.b.x, triangle.c.x);
     const min_y = @min(triangle.a.y, triangle.b.y, triangle.c.y);
