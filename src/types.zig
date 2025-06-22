@@ -25,11 +25,11 @@ pub const Triangle2D = struct {
     c: Vec2f,
     color: Pixel,
 
-    pub fn fromTriangle3D(t3: Triangle3D) @This() {
+    pub fn fromTriangle3D(t3: Triangle3D, camera_options: CameraOptions) @This() {
         const t2: Triangle2D = .{
-            .a = projection.vec3fToVec2f(t3.a, config.WIDTH, config.HEIGHT),
-            .b = projection.vec3fToVec2f(t3.b, config.WIDTH, config.HEIGHT),
-            .c = projection.vec3fToVec2f(t3.c, config.WIDTH, config.HEIGHT),
+            .a = projection.vec3fToVec2f(t3.a, config.WIDTH, config.HEIGHT, camera_options),
+            .b = projection.vec3fToVec2f(t3.b, config.WIDTH, config.HEIGHT, camera_options),
+            .c = projection.vec3fToVec2f(t3.c, config.WIDTH, config.HEIGHT, camera_options),
             .color = t3.color,
         };
         return t2;
@@ -41,4 +41,8 @@ pub const Triangle3D = struct {
     b: Vec3f,
     c: Vec3f,
     color: Pixel,
+};
+
+pub const CameraOptions = struct {
+    yaw: f32,
 };
