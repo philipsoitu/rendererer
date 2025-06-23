@@ -45,4 +45,5 @@ pub const Triangle3D = struct {
 
 pub const CameraOptions = struct {
     yaw: f32,
+    pixel_height: f32,
 };

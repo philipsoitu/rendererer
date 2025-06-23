@@ -16,7 +16,7 @@ pub fn vec3fToVec2f(
 ) Vec2f {
     const vec3f_world = toWorldPoint(vec3f, camera_options);
 
-    const screen_height: f32 = 20.0;
+    const screen_height: f32 = camera_options.pixel_height;
     const pixels_per_unit: f32 = height / screen_height;
 
     const pixel_offset = Vec2f{

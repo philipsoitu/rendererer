@@ -13,9 +13,10 @@ const HEIGHT: usize = @import("config.zig").HEIGHT;
 pub fn main() !void {
     var camera_options: CameraOptions = .{
         .yaw = 0.0,
+        .pixel_height = 50.0,
     };
 
-    const obj_model = try obj.parseFile("models/cow.obj");
+    const obj_model = try obj.parseFile("models/teddy_bear.obj");
     defer obj_model.deinit();
 
     const triangles = try obj.modelToTriangles(obj_model);
@@ -26,7 +27,7 @@ pub fn main() !void {
     var filename_buffer: [23]u8 = undefined;
 
     for (0..1000) |frame| {
-        camera_options.yaw = @as(f32, @floatFromInt(frame)) / 100;
+        camera_options.yaw = @as(f32, @floatFromInt(frame)) / 1000 * std.math.pi;
         std.debug.print("{}\n", .{camera_options.yaw});
         rasterizer.render(WIDTH, HEIGHT, &framebuffer, &triangles.items, camera_options);
 
