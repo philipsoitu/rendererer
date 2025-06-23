@@ -37,5 +37,5 @@ pub fn pointInTriangle(t: Triangle2D, p: Vec2f) bool {
     const side_ab = pointOnRightSide(t.a, t.b, p);
     const side_bc = pointOnRightSide(t.b, t.c, p);
     const side_ca = pointOnRightSide(t.c, t.a, p);
-    return side_ab == side_bc and side_bc == side_ca;
+    return side_ab and side_bc and side_ca;
 }

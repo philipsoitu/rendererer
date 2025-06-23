@@ -5,19 +5,22 @@ const Pixel = @import("types.zig").Pixel;
 const Vec2f = @import("types.zig").Vec2f;
 const Triangle2D = @import("types.zig").Triangle2D;
 const Triangle3D = @import("types.zig").Triangle3D;
-const CameraOptions = @import("types.zig").CameraOptions;
+const RenderOptions = @import("types.zig").RenderOptions;
 
 pub fn render(
     comptime width: usize,
     comptime height: usize,
     framebuffer: *[height][width]Pixel,
     triangles3D: *const []Triangle3D,
-    camera_options: CameraOptions,
+    render_options: RenderOptions,
 ) void {
     clearFramebuffer(width, height, framebuffer);
 
     for (triangles3D.*) |triangle3D| {
-        const triangle = Triangle2D.fromTriangle3D(triangle3D, camera_options);
+        const triangle = Triangle2D.fromTriangle3D(
+            triangle3D,
+            render_options,
+        );
         drawTriangle2D(width, height, framebuffer, triangle);
     }
 }

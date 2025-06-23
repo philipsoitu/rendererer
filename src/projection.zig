@@ -1,6 +1,6 @@
 const Vec2f = @import("types.zig").Vec2f;
 const Vec3f = @import("types.zig").Vec3f;
-const CameraOptions = @import("types.zig").CameraOptions;
+const RenderOptions = @import("types.zig").RenderOptions;
 
 const Basis = struct {
     i: Vec3f,
@@ -12,11 +12,11 @@ pub fn vec3fToVec2f(
     vec3f: Vec3f,
     comptime width: usize,
     comptime height: usize,
-    camera_options: CameraOptions,
+    render_options: RenderOptions,
 ) Vec2f {
-    const vec3f_world = toWorldPoint(vec3f, camera_options);
+    const vec3f_world = toWorldPoint(vec3f, render_options);
 
-    const screen_height: f32 = camera_options.pixel_height;
+    const screen_height: f32 = render_options.pixel_height;
     const pixels_per_unit: f32 = height / screen_height;
 
     const pixel_offset = Vec2f{
@@ -29,8 +29,8 @@ pub fn vec3fToVec2f(
     };
 }
 
-pub fn toWorldPoint(p: Vec3f, camera_options: CameraOptions) Vec3f {
-    const basis = getBasisVectors(camera_options.yaw);
+pub fn toWorldPoint(p: Vec3f, rener_options: RenderOptions) Vec3f {
+    const basis = getBasisVectors(rener_options.yaw);
     return transformVector(
         basis.i,
         basis.j,
