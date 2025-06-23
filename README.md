@@ -1,3 +1,2 @@
-![Screenshot of 3D Rasterizer](assets/screenshot.png)
-
+# Latest Render
 ![Latest Render](output/output.gif)
