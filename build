@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# clean up
+rm output/frames/*
+rm output/output.gif
+
+# compile and generate frames
+zig build run
+
+# generate video using ffmpreg
+ffmpeg -y -framerate 30 -i output/frames/f%04d.ppm output.gif
+mpv output/output.gif
+mv output.gif output/output.gif
+
+# open video
+mpv output/output.gif
