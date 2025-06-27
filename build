@@ -13,4 +13,4 @@ mpv output/output.gif
 mv output.gif output/output.gif
 
 # open video
-mpv output/output.gif
+mpv --loop output/output.gif
