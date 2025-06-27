@@ -18,24 +18,33 @@ pub fn perpendicular(vec: Vec2f) Vec2f {
     };
 }
 
-/// checks if point p is on the right side of a -> b
-pub fn pointOnRightSide(a: Vec2f, b: Vec2f, p: Vec2f) bool {
-    const ap = Vec2f{
-        .x = p.x - a.x,
-        .y = p.y - a.y,
+// checks if point p is in triangle abc
+pub fn pointInTriangle(t: Triangle2D, p: Vec2f, weights: *Vec3f) bool {
+    _ = .{ t, p };
+    const area_abp = signedTriangleArea(t.a, t.b, p);
+    const area_bcp = signedTriangleArea(t.b, t.c, p);
+    const area_cap = signedTriangleArea(t.c, t.a, p);
+    const in_triangle: bool = area_abp >= 0 and area_bcp >= 0 and area_cap >= 0;
+
+    const inv_area_sum: f32 = 1 / (area_abp + area_bcp + area_cap);
+    const weight_a = area_bcp * inv_area_sum;
+    const weight_b = area_cap * inv_area_sum;
+    const weight_c = area_abp * inv_area_sum;
+    weights.* = .{ .x = weight_a, .y = weight_b, .z = weight_c };
+
+    return in_triangle;
+}
+
+pub fn signedTriangleArea(a: Vec2f, b: Vec2f, c: Vec2f) f32 {
+    const ac: Vec2f = .{
+        .x = c.x - a.x,
+        .y = c.y - a.y,
     };
-    const ab = Vec2f{
+    const ab: Vec2f = .{
         .x = b.x - a.x,
         .y = b.y - a.y,
     };
     const ab_perp = perpendicular(ab);
-    return dotProduct(ap, ab_perp) >= 0;
-}
 
-// checks if point p is in triangle abc
-pub fn pointInTriangle(t: Triangle2D, p: Vec2f) bool {
-    const side_ab = pointOnRightSide(t.a, t.b, p);
-    const side_bc = pointOnRightSide(t.b, t.c, p);
-    const side_ca = pointOnRightSide(t.c, t.a, p);
-    return side_ab and side_bc and side_ca;
+    return dotProduct(ac, ab_perp) / 2;
 }

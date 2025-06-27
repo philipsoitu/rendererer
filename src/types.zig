@@ -47,6 +47,5 @@ pub const RenderOptions = struct {
     yaw: f32,
     pitch: f32,
     position: Vec3f,
-
-    pixel_height: f32,
+    fov: f32,
 };

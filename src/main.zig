@@ -4,6 +4,7 @@ const obj = @import("obj.zig");
 const math = @import("math.zig");
 const rasterizer = @import("rasterizer.zig");
 const Pixel = @import("types.zig").Pixel;
+const Vec3f = @import("types.zig").Vec3f;
 const Triangle2D = @import("types.zig").Triangle2D;
 const RenderOptions = @import("types.zig").RenderOptions;
 
@@ -14,8 +15,8 @@ pub fn main() !void {
     var render_options: RenderOptions = .{
         .yaw = 0.0,
         .pitch = 0.0,
-        .position = .{ .x = 0.0, .y = 0.0, .z = 0.0 },
-        .pixel_height = 10.0,
+        .position = .{ .x = 0.0, .y = 0.0, .z = 9.9 },
+        .fov = 90.0,
     };
 
     const obj_model = try obj.parseFile("models/cow.obj");
@@ -25,12 +26,14 @@ pub fn main() !void {
     defer triangles.deinit();
 
     var framebuffer: [HEIGHT][WIDTH]Pixel = undefined;
+    var depth_buffer: [HEIGHT][WIDTH]Vec3f = undefined;
+    depth_buffer[0][0].x = 0;
 
     var filename_buffer: [23]u8 = undefined;
 
     for (0..100) |frame| {
-        render_options.yaw = @as(f32, @floatFromInt(frame)) / 100 * std.math.pi;
-        render_options.pitch = @as(f32, @floatFromInt(frame)) / 100 * std.math.pi;
+        render_options.yaw = @as(f32, @floatFromInt(frame)) / 100 * 2 * std.math.pi;
+        render_options.pitch = @as(f32, @floatFromInt(frame)) / 100 * 4 * std.math.pi;
         std.debug.print("frame {}\n", .{frame});
         rasterizer.render(
             WIDTH,
