@@ -29,8 +29,8 @@ pub fn vec3fToVec2f(
     };
 }
 
-pub fn toWorldPoint(p: Vec3f, rener_options: RenderOptions) Vec3f {
-    const basis = getBasisVectors(rener_options.yaw);
+pub fn toWorldPoint(p: Vec3f, render_options: RenderOptions) Vec3f {
+    const basis = getBasisVectors(render_options.yaw, render_options.pitch);
     return transformVector(
         basis.i,
         basis.j,
@@ -40,15 +40,19 @@ pub fn toWorldPoint(p: Vec3f, rener_options: RenderOptions) Vec3f {
 }
 
 /// calculates (i, j, k) basis vectors
-fn getBasisVectors(yaw: f32) Basis {
-    const i_hat = Vec3f{ .x = @cos(yaw), .y = 0, .z = @sin(yaw) };
-    const j_hat = Vec3f{ .x = 0, .y = 1, .z = 0 };
-    const k_hat = Vec3f{ .x = -@sin(yaw), .y = 0, .z = @cos(yaw) };
+fn getBasisVectors(yaw: f32, pitch: f32) Basis {
+    const i_hat_yaw = Vec3f{ .x = @cos(yaw), .y = 0, .z = @sin(yaw) };
+    const j_hat_yaw = Vec3f{ .x = 0, .y = 1, .z = 0 };
+    const k_hat_yaw = Vec3f{ .x = -@sin(yaw), .y = 0, .z = @cos(yaw) };
+
+    const i_hat_pitch = Vec3f{ .x = 1, .y = 0, .z = 1 };
+    const j_hat_pitch = Vec3f{ .x = 0, .y = @cos(pitch), .z = -@sin(pitch) };
+    const k_hat_pitch = Vec3f{ .x = 0, .y = @sin(pitch), .z = @cos(pitch) };
 
     return Basis{
-        .i = i_hat,
-        .j = j_hat,
-        .k = k_hat,
+        .i = transformVector(i_hat_yaw, j_hat_yaw, k_hat_yaw, i_hat_pitch),
+        .j = transformVector(i_hat_yaw, j_hat_yaw, k_hat_yaw, j_hat_pitch),
+        .k = transformVector(i_hat_yaw, j_hat_yaw, k_hat_yaw, k_hat_pitch),
     };
 }
 

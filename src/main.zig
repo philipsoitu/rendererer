@@ -29,6 +29,7 @@ pub fn main() !void {
 
     for (0..100) |frame| {
         render_options.yaw = @as(f32, @floatFromInt(frame)) / 100 * std.math.pi;
+        render_options.pitch = @as(f32, @floatFromInt(frame)) / 100 * std.math.pi;
         std.debug.print("frame {}\n", .{frame});
         rasterizer.render(
             WIDTH,
