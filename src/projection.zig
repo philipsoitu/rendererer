@@ -16,8 +16,7 @@ pub fn vec3fToVec2f(
 ) Vec2f {
     const vec3f_world = toWorldPoint(vec3f, render_options);
 
-    const screen_height: f32 = render_options.pixel_height;
-    const pixels_per_unit: f32 = height / screen_height;
+    const pixels_per_unit: f32 = height / render_options.pixel_height / vec3f_world.z;
 
     const pixel_offset = Vec2f{
         .x = vec3f_world.x * pixels_per_unit,
@@ -31,12 +30,19 @@ pub fn vec3fToVec2f(
 
 pub fn toWorldPoint(p: Vec3f, render_options: RenderOptions) Vec3f {
     const basis = getBasisVectors(render_options.yaw, render_options.pitch);
-    return transformVector(
+
+    const transformed = transformVector(
         basis.i,
         basis.j,
         basis.k,
         p,
     );
+
+    return Vec3f{
+        .x = transformed.x + render_options.position.x,
+        .y = transformed.y + render_options.position.y,
+        .z = transformed.z + render_options.position.z,
+    };
 }
 
 /// calculates (i, j, k) basis vectors

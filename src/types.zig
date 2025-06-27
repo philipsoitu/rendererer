@@ -46,6 +46,7 @@ pub const Triangle3D = struct {
 pub const RenderOptions = struct {
     yaw: f32,
     pitch: f32,
+    position: Vec3f,
 
     pixel_height: f32,
 };

@@ -14,6 +14,7 @@ pub fn main() !void {
     var render_options: RenderOptions = .{
         .yaw = 0.0,
         .pitch = 0.0,
+        .position = .{ .x = 0.0, .y = 0.0, .z = 0.0 },
         .pixel_height = 10.0,
     };
 
